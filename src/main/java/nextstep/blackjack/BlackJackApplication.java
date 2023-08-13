@@ -1,24 +1,26 @@
 package nextstep.blackjack;
 
+import nextstep.blackjack.gameEnum.GameState;
 import nextstep.blackjack.gameSystem.GameManager;
 import nextstep.blackjack.view.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BlackJackApplication {
     public static void main(String[] args) {
         GameManager gameManager = GameManager.getInstance();
 
-        gameManager.start(new CollectParticipantView());
-        gameManager.betting(new BettingView());
-        gameManager.distributeCards(new FirstDistributeView());
-        gameManager.cardOpen(new CardOpenView());
+        List<View> gameViews = Arrays.asList(
+                new CollectParticipantView(),
+                new BettingView(),
+                new FirstDistributeView(),
+                new CardTurnView(),
+                new DealerCardTurnView(),
+                new ProfitView()
+        );
 
-        while(gameManager.isBust()) {
-            gameManager.doNext(new CardTurnView());
-            gameManager.doNext(new DealerCardTurnView());
-            gameManager.doNext(new CardOpenView());
-        }
-
-        // 결과뷰
-        // 아 에반데 ㅡㅡ
+        gameManager.changeGameState(GameState.RUN);
+        gameViews.stream().forEach(v -> gameManager.doNext(v));
     }
 }

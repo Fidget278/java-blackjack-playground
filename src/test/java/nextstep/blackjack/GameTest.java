@@ -1,14 +1,20 @@
 package nextstep.blackjack;
 
+import nextstep.blackjack.card.Card;
 import nextstep.blackjack.card.CardDeck;
+import nextstep.blackjack.card.CardNum;
+import nextstep.blackjack.card.CardType;
 import nextstep.blackjack.participant.Dealer;
 import nextstep.blackjack.participant.Participant;
 import nextstep.blackjack.participant.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.Caret;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class GameTest {
 
@@ -53,5 +59,74 @@ public class GameTest {
         }
     }
 
+    @Test
+    public void 에이스_점수_계산_AA() {
+        player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.ACE, CardType.DIAMOND));
+        assertThat(player1.calcScore()).isEqualTo(12);
+    }
+
+    @Test
+    public void 에이스_점수_계산_AJ() {
+        player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.QUEEN, CardType.DIAMOND));
+        assertThat(player1.calcScore()).isEqualTo(20);
+    }
+
+    @Test
+    public void 블랙잭_체크() {
+        dealer.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.CLOVER));
+
+        assertThat(dealer.isBlackJack()).isEqualTo(true);
+
+        player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.TWO, CardType.DIAMOND));
+
+        assertThat(player1.isBlackJack()).isEqualTo(false);
+
+        player2.receiveCard(new Card(CardNum.SIX, CardType.CLOVER));
+        player2.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+
+        assertThat(player2.isBlackJack()).isEqualTo(false);
+    }
+
+    @Test
+    public void 버스트_체크() {
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+        dealer.receiveCard(new Card(CardNum.SIX, CardType.CLOVER));
+
+        assertThat(dealer.isBust()).isEqualTo(true);
+
+        player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.TWO, CardType.DIAMOND));
+
+        assertThat(player1.isBust()).isEqualTo(false);
+    }
+
+    @Test
+    public void 타이_체크() {
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.SIX, CardType.DIAMOND));
+
+        player1.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.EIGHT, CardType.DIAMOND));
+
+        assertThat(player1.isTie(dealer.getScore())).isEqualTo(true);
+
+        player2.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player2.receiveCard(new Card(CardNum.SEVEN, CardType.DIAMOND));
+
+        assertThat(player2.isTie(dealer.getScore())).isEqualTo(false);
+    }
+
+    // 딜러 블랙잭, 수익 체크
+    // 딜러 블랙잭, 플레이어 동점 수익 체크
+    // 플레이어 블랙잭, 수익 체크
+    // 딜러 버스트, 플레이어 동점 수익 체크
+    // 딜러 버스트, 플레이어 동점 없음 수익 체크
+    // 딜러랑 플레이어 동점 승리 수익 체크
+    // 플레이어1과 플레이어2 동점 승리 수익 체크
 
 }

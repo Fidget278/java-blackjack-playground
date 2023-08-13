@@ -1,9 +1,9 @@
 package nextstep.blackjack.view;
 
-import nextstep.blackjack.participant.Participant;
-
-import java.util.List;
+import nextstep.blackjack.gameEnum.GameState;
+import nextstep.blackjack.participant.Participants;
 
 public interface View {
-    void view(List<Participant> participants);
+    boolean isRunnable(GameState gameState);
+    void view(Participants participants);
 }

@@ -1,17 +1,21 @@
 package nextstep.blackjack.view;
 
+import nextstep.blackjack.gameEnum.GameState;
+import nextstep.blackjack.gameSystem.GameManager;
 import nextstep.blackjack.participant.Participant;
-
-import java.util.List;
+import nextstep.blackjack.participant.Participants;
 
 public class DealerCardTurnView extends CardTurnView implements View {
 
     @Override
-    public void view(List<Participant> participants) {
-        participants.stream().filter(participant -> participant.isDealer())
-                .forEach(participant -> {
-                    hit(checkDealerScore(participant), participant);
-                });
+    public boolean isRunnable(GameState gameState) {
+        return gameState == GameState.RUN;
+    }
+
+    @Override
+    public void view(Participants participants) {
+        hit(checkDealerScore(participants.getDealer()), participants.getDealer());
+        GameManager.getInstance().changeGameState(GameState.FINISH);
     }
 
     private boolean checkDealerScore(Participant participant) {
@@ -20,10 +24,12 @@ public class DealerCardTurnView extends CardTurnView implements View {
 
     @Override
     protected void hit(boolean hit, Participant participant) {
-        if(!hit)
+        if(!hit) {
+            System.out.println("딜러는 카드를 받지 않았습니다.");
             return;
+        }
 
         System.out.println("딜러는 16이하라 한장의 카드를 더 받았습니다.");
-        super.hit(hit, participant);
+        participant.receiveCard(GameManager.getInstance().distribute());
     }
 }

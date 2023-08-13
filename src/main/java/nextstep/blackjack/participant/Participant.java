@@ -13,6 +13,7 @@ public class Participant {
     protected int betMoney = 0;
     protected int profit = 0;
     protected List<Card> cards = new ArrayList<>();
+    protected int score = 0;
 
     public final static int BLACKJACK = 21;
 
@@ -21,10 +22,6 @@ public class Participant {
             throw new IllegalArgumentException("Participant Name Required.");
 
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void receiveCard(Card card) {
@@ -43,13 +40,19 @@ public class Participant {
             score += cardNum.getScore();
         }
 
-        if(isContainAce())
-            return calcAce(score);
+        this.score = score;
 
-        return score;
+        return calcAce(score);
+    }
+
+    public int calcGap() {
+        return BLACKJACK - score;
     }
 
     private int calcAce(int score) {
+
+        if(!isContainAce())
+            return score;
 
         if(score >= BLACKJACK)
             return score;
@@ -70,6 +73,39 @@ public class Participant {
                 .anyMatch(card -> card.getCardNum().isAce());
     }
 
+    public boolean isBlackJack() {
+        return calcScore() == BLACKJACK;
+    }
+
+    public boolean isTie(int score) {
+        return calcScore() == score;
+    }
+
+    public boolean isBust() {
+        if(calcScore() > BLACKJACK) {
+            System.out.println(getName() + "버스트임");
+            return true;
+        }
+
+        System.out.println(getName() + "버스트 아님");
+        return false;
+    }
+
+    public int getBetMoney() {
+        return betMoney;
+    }
+
+    public int calcProfit(boolean isTie, double profitMultiplier, int betMoney) {
+        if(isTie) {
+            profit = (int) (betMoney * profitMultiplier);
+            return profit;
+        }
+
+        profit = betMoney * -1;
+        return profit;
+    }
+
+
     public void bet(int money) {
         betMoney = money;
     }
@@ -78,7 +114,13 @@ public class Participant {
         return false;
     }
 
-    public int getBetMoney() {
-        return betMoney;
+    public int getScore() {
+        return calcScore();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getProfit() { return profit; }
 }

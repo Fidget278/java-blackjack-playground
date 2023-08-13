@@ -12,16 +12,11 @@ public class Dealer extends Participant {
     }
 
     @Override
-    public List<Card> getOpenableCards() {
-        return cards.stream()
-                .skip(1) // 첫 번째 요소를 제외하고 스트림 생성
-                .collect(Collectors.collectingAndThen(
-                        Collectors.toList()
-                        , Collections::unmodifiableList));
-    }
-
-    @Override
     public boolean isDealer() {
         return true;
+    }
+
+    public void setDelaerProfit(int profit) {
+        this.profit = profit;
     }
 }

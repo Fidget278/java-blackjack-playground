@@ -19,6 +19,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return "" + cardNum.getName() + cardType;
+        return cardNum.getName() + " " + cardType;
     }
 }
