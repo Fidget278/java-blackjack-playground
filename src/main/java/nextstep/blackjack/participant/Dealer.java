@@ -16,7 +16,7 @@ public class Dealer extends Participant {
         return true;
     }
 
-    public void setDelaerProfit(int profit) {
+    public void setDealerProfit(int profit) {
         this.profit = profit;
     }
 }

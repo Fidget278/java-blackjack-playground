@@ -1,6 +1,7 @@
 package nextstep.blackjack.participant;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +15,8 @@ public class Participants {
         participants = new ArrayList<>();
     }
 
-    public Participant getDealer() {
-        return dealer;
+    public Dealer getDealer() {
+        return (Dealer) dealer;
     }
 
     public List<Participant> getPlayers() {
@@ -34,5 +35,57 @@ public class Participants {
     public void addPlayer(Participant player) {
         participants.add(player);
         players.add(player);
+    }
+
+    public void finishGame() {
+        getAllParticipants().stream().forEach(Participant::calcScore);
+
+        if(!checkBlackJack())
+            winLose();
+    }
+
+    private boolean checkBlackJack() {
+
+        if(dealer.isBlackJack()) {
+            calcAllProfit(0, dealer);
+            return true;
+        }
+
+        List<Participant> blackJackWinners =
+                getPlayers().stream()
+                        .filter(Participant::isBlackJack)
+                        .collect(Collectors.toList());
+
+        if(!blackJackWinners.isEmpty()) {
+            calcAllProfit(2, blackJackWinners.get(0));
+            return true;
+        }
+
+        return false;
+    }
+    private void winLose() {
+        int profitMultiplier = 1;
+
+        Participant winner = getAllParticipants().stream()
+                .filter(p -> !p.isBust())
+                .min(Comparator.comparingInt(Participant::calcGap)).get();
+
+        if(winner.isTie(dealer.getScore())) {
+            winner = dealer;
+            profitMultiplier = 0;
+        }
+
+        calcAllProfit(profitMultiplier, winner);
+    }
+
+    private void calcAllProfit(double profitMultiplier, Participant winner) {
+        int betMoneySum = 0;
+
+        for(Participant participant : players) {
+            int profit = participant.calcProfit(participant.isTie(winner.getScore()), profitMultiplier, participant.getBetMoney());
+            betMoneySum -= profit;
+        }
+
+        getDealer().setDealerProfit(betMoneySum);
     }
 }

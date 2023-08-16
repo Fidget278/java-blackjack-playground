@@ -6,6 +6,7 @@ import nextstep.blackjack.card.CardNum;
 import nextstep.blackjack.card.CardType;
 import nextstep.blackjack.participant.Dealer;
 import nextstep.blackjack.participant.Participant;
+import nextstep.blackjack.participant.Participants;
 import nextstep.blackjack.participant.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,7 +122,55 @@ public class GameTest {
         assertThat(player2.isTie(dealer.getScore())).isEqualTo(false);
     }
 
-    // 딜러 블랙잭, 수익 체크
+    @Test
+    public void 딜러_블랙잭_수익() {
+        dealer.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+
+        player1.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.EIGHT, CardType.DIAMOND));
+        player1.bet(10000);
+
+        player2.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player2.receiveCard(new Card(CardNum.SEVEN, CardType.DIAMOND));
+        player2.bet(20000);
+
+        Participants participants = new Participants();
+        participants.addDealer(dealer);
+        participants.addPlayer(player1);
+        participants.addPlayer(player2);
+
+        participants.finishGame();
+        assertThat(dealer.getProfit()).isEqualTo(30000);
+        assertThat(player1.getProfit()).isEqualTo(-10000);
+        assertThat(player2.getProfit()).isEqualTo(-20000);
+    }
+
+    @Test
+    public void 블랙잭_딜러_플레이어_동점_수익() {
+        dealer.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+
+        player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+        player1.bet(10000);
+
+        player2.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player2.receiveCard(new Card(CardNum.SEVEN, CardType.DIAMOND));
+        player2.bet(20000);
+
+        Participants participants = new Participants();
+        participants.addDealer(dealer);
+        participants.addPlayer(player1);
+        participants.addPlayer(player2);
+
+        participants.finishGame();
+
+        assertThat(dealer.getProfit()).isEqualTo(20000);
+        assertThat(player1.getProfit()).isEqualTo(10000);
+        assertThat(player2.getProfit()).isEqualTo(-20000);
+    }
+
     // 딜러 블랙잭, 플레이어 동점 수익 체크
     // 플레이어 블랙잭, 수익 체크
     // 딜러 버스트, 플레이어 동점 수익 체크

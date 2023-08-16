@@ -6,7 +6,9 @@ import nextstep.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Participant {
     protected String name;
@@ -74,6 +76,11 @@ public class Participant {
     }
 
     public boolean isBlackJack() {
+
+        // 카드 갯수가 2장이 아니면 처음 턴을 초과한 것으로 블랙잭이 아님
+        if(cards.size() != 2)
+            return false;
+
         return calcScore() == BLACKJACK;
     }
 
@@ -104,7 +111,6 @@ public class Participant {
         profit = betMoney * -1;
         return profit;
     }
-
 
     public void bet(int money) {
         betMoney = money;
