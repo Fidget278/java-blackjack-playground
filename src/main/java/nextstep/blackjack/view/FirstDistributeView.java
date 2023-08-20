@@ -44,12 +44,7 @@ public class FirstDistributeView implements View {
     }
 
     private void checkBlackJack(Participants participants) {
-        Participant participant = participants.getAllParticipants().stream()
-                .filter(Participant::isBlackJack)
-                .findFirst()
-                .orElse(null);
-
-        if(participant != null)
+        if(participants.getDealer().isBlackJack())
             GameManager.getInstance().changeGameState(GameState.FINISH);
     }
 

@@ -11,7 +11,7 @@ public enum CardNum {
     SIX("6", 6, 6),
     SEVEN("7", 7, 7),
     EIGHT("8", 8, 8),
-    NINE("8", 9, 9),
+    NINE("9", 9, 9),
     TEN("10", 10, 10),
     JACK("J", 11, 10),
     QUEEN("Q", 12, 10),

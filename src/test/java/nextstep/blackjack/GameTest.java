@@ -71,7 +71,7 @@ public class GameTest {
     public void 에이스_점수_계산_AJ() {
         player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
         player1.receiveCard(new Card(CardNum.QUEEN, CardType.DIAMOND));
-        assertThat(player1.calcScore()).isEqualTo(20);
+        assertThat(player1.calcScore()).isEqualTo(21);
     }
 
     @Test
@@ -167,14 +167,72 @@ public class GameTest {
         participants.finishGame();
 
         assertThat(dealer.getProfit()).isEqualTo(20000);
+        assertThat(player1.getProfit()).isEqualTo(0);
+        assertThat(player2.getProfit()).isEqualTo(-20000);
+    }
+
+    @Test
+    public void 플레이어_블랙잭_수익() {
+        dealer.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.SIX, CardType.DIAMOND));
+
+        player1.receiveCard(new Card(CardNum.ACE, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+        player1.bet(10000);
+
+        player2.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player2.receiveCard(new Card(CardNum.SEVEN, CardType.DIAMOND));
+        player2.bet(20000);
+
+        Participants participants = new Participants();
+        participants.addDealer(dealer);
+        participants.addPlayer(player1);
+        participants.addPlayer(player2);
+
+        participants.finishGame();
+
+        assertThat(dealer.getProfit()).isEqualTo(5000);
+        assertThat(player1.getProfit()).isEqualTo(15000);
+        assertThat(player2.getProfit()).isEqualTo(-20000);
+    }
+
+    @Test
+    public void 딜러_버스트_수익() {
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.SIX, CardType.DIAMOND));
+        dealer.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+
+        player1.receiveCard(new Card(CardNum.TEN, CardType.CLOVER));
+        player1.receiveCard(new Card(CardNum.TEN, CardType.DIAMOND));
+        player1.bet(10000);
+
+        player2.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        player2.receiveCard(new Card(CardNum.SEVEN, CardType.DIAMOND));
+        player2.bet(20000);
+
+        Participants participants = new Participants();
+        participants.addDealer(dealer);
+        participants.addPlayer(player1);
+        participants.addPlayer(player2);
+
+        participants.finishGame();
+
+        assertThat(dealer.getProfit()).isEqualTo(10000);
         assertThat(player1.getProfit()).isEqualTo(10000);
         assertThat(player2.getProfit()).isEqualTo(-20000);
     }
 
-    // 딜러 블랙잭, 플레이어 동점 수익 체크
-    // 플레이어 블랙잭, 수익 체크
+
+    @Test
+    public void 뭔데() {
+        dealer.receiveCard(new Card(CardNum.EIGHT, CardType.CLOVER));
+        dealer.receiveCard(new Card(CardNum.EIGHT, CardType.HEART));
+        dealer.receiveCard(new Card(CardNum.QUEEN, CardType.HEART));
+
+        assertThat(dealer.calcScore()).isEqualTo(26);
+    }
+
     // 딜러 버스트, 플레이어 동점 수익 체크
-    // 딜러 버스트, 플레이어 동점 없음 수익 체크
     // 딜러랑 플레이어 동점 승리 수익 체크
     // 플레이어1과 플레이어2 동점 승리 수익 체크
 

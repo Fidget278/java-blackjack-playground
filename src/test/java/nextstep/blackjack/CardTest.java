@@ -53,7 +53,9 @@ public class CardTest {
         // 처음 형태의 리스트랑 비교해야되나?
 
         // 일단 육안 확인;;
-//        int count = CardDeck.CARD_TYPE_MAX * CardType.values().length;
+        int count = CardDeck.CARD_TYPE_MAX * CardType.values().length;
+        for(Card card : cardDeck.getCardsByType(CardType.DIAMOND))
+            System.out.println(card);
 //        while(--count >= 0) {
 //            System.out.println(cardDeck.distribute());
 //        }

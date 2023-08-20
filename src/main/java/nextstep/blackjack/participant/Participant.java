@@ -35,16 +35,15 @@ public class Participant {
     }
 
     public int calcScore() {
-        int score = 0;
+        int sum = 0;
 
         for(Card card : cards) {
             CardNum cardNum = card.getCardNum();
-            score += cardNum.getScore();
+            sum += cardNum.getScore();
         }
 
-        this.score = score;
-
-        return calcAce(score);
+        score = calcAce(sum);
+        return score;
     }
 
     public int calcGap() {
@@ -90,11 +89,9 @@ public class Participant {
 
     public boolean isBust() {
         if(calcScore() > BLACKJACK) {
-            System.out.println(getName() + "버스트임");
             return true;
         }
 
-        System.out.println(getName() + "버스트 아님");
         return false;
     }
 

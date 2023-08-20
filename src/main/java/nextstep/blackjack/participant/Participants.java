@@ -57,7 +57,7 @@ public class Participants {
                         .collect(Collectors.toList());
 
         if(!blackJackWinners.isEmpty()) {
-            calcAllProfit(2, blackJackWinners.get(0));
+            calcAllProfit(1.5, blackJackWinners.get(0));
             return true;
         }
 

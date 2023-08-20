@@ -27,11 +27,9 @@ public class CardDeck {
     public Card distribute() {
         if(cards.size() <= 0)
             throw new IndexOutOfBoundsException("카드 더미에 남은 카드가 없습니다.");
+
         Random random = new Random();
-        int randomNum = random.nextInt(cards.size());
-        Card card = cards.get(randomNum);
-        cards.remove(randomNum);
-        return card;
+        return cards.remove(random.nextInt(cards.size()));
     }
 
     public int getRemainNumberOfCards() {
